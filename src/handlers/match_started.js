@@ -1,8 +1,13 @@
-const { initMatch } = require('../state')
+const { initMatch, updatePlayers, updateTeams } = require('../state')
 const { sendEmbed } = require('../webhook')
 
-async function handleMatchStarted(gamePassword) {
-  initMatch(gamePassword)
+async function handleMatchStarted(body) {
+  const { GamePassword, Players, Teams } = body
+
+  initMatch(GamePassword)
+
+  if (Players) updatePlayers(GamePassword, Players)
+  if (Teams) updateTeams(GamePassword, Teams)
 
   await sendEmbed({
     title: 'Partido Iniciado',

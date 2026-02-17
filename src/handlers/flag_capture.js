@@ -1,4 +1,4 @@
-const { recordCapture } = require('../state')
+const { recordCapture, updatePlayers, updateTeams } = require('../state')
 const { sendEmbed } = require('../webhook')
 
 // Unicode emoji fallbacks (custom Discord emojis won't work in webhooks)
@@ -17,6 +17,8 @@ async function handleFlagCapture(capture) {
   const teamLabel = team === 'RED' ? 'ROJO' : 'AZUL'
 
   recordCapture(GamePassword, player.Name, mapName)
+  updatePlayers(GamePassword, Players)
+  updateTeams(GamePassword, Teams)
 
   const minutes = String(Math.floor(RemainingTime / 60)).padStart(2, '0')
   const seconds = String(RemainingTime % 60).padStart(2, '0')

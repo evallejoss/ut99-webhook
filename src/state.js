@@ -1,5 +1,5 @@
 // Map<gamePassword, MatchState>
-// MatchState = { captures: Map<playerName, count>, map: string, startedAt: Date }
+// MatchState = { captures: Map<playerName, count>, map: string, startedAt: Date, players: [], teams: {}, gamePassword: string }
 const matches = new Map()
 
 const TIMEOUT_MS = 2 * 60 * 60 * 1000 // 2 hours
@@ -12,7 +12,10 @@ function initMatch(gamePassword) {
   matches.set(gamePassword, {
     captures: new Map(),
     map: null,
-    startedAt: new Date()
+    startedAt: new Date(),
+    players: [],
+    teams: {},
+    gamePassword
   })
 }
 
@@ -25,6 +28,20 @@ function recordCapture(gamePassword, playerName, map) {
   match.map = map
   const current = match.captures.get(playerName) || 0
   match.captures.set(playerName, current + 1)
+}
+
+function updatePlayers(gamePassword, players) {
+  const match = matches.get(gamePassword)
+  if (match) match.players = players
+}
+
+function updateTeams(gamePassword, teams) {
+  const match = matches.get(gamePassword)
+  if (match) match.teams = teams
+}
+
+function getAllMatches() {
+  return Array.from(matches.values())
 }
 
 function getMVP(gamePassword) {
@@ -56,4 +73,4 @@ setInterval(() => {
   }
 }, 10 * 60 * 1000) // check every 10 minutes
 
-module.exports = { getMatch, initMatch, recordCapture, getMVP, clearMatch }
+module.exports = { getMatch, initMatch, recordCapture, updatePlayers, updateTeams, getAllMatches, getMVP, clearMatch }
